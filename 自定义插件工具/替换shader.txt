@@ -1,0 +1,42 @@
+﻿	 public void ReplaceShader(GameObject root)
+        {
+            List<Material> mats = GetPrefabDepeMaterial(root);
+            foreach (Material m in mats)
+            {
+                if (m != null)
+                {
+                    var shaderName = m.shader.name;
+                    var newShader = Shader.Find(shaderName);
+                    if (newShader != null)
+                    {
+                        //if(Debuger.isEnable) Debuger.Log("替换shader " + shaderName);
+                        m.shader = newShader;
+                    }
+                }
+            }
+        }
+
+
+        List<Material> GetPrefabDepeMaterial(GameObject go)
+        {
+            List<Material> results = new List<Material>();
+
+            Renderer[] ren = go.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < ren.Length; i++)
+            {
+                Material[] mats = ren[i].materials;
+                if(mats == null)
+                {
+                    //Debuger.LogError("无法获取到材质球");
+                    continue;
+                }
+                for (int j = 0; j < mats.Length; j++)
+                {
+                    if (!results.Contains(mats[j]))
+                    {
+                        results.Add(mats[j]);
+                    }
+                }
+            }
+            return results;
+        }
